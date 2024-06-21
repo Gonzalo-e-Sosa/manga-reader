@@ -1,0 +1,84 @@
+---
+import { ENDPOINTS } from "@/consts";
+
+const date = new Date("2024-06-01").toISOString().slice(0, -5);
+
+const res = await fetch(ENDPOINTS.MANGA_LIST_CREATED_AT(date));
+const root = await res.json();
+
+const { data } = root;
+
+function replaceDescription(val: string | undefined) {
+  if (val === undefined) return "No description";
+  return val.length > 100 ? val.slice(0, 100) + "..." : val;
+}
+---
+
+<Fragment>
+  <h2>Manga List</h2>
+  <p>Created since: {new Date(date).toDateString()}</p>
+  <ul>
+    {
+      data.map(
+        (manga: {
+          attributes: {
+            title: { en: unknown };
+            description: { en: string | undefined };
+          };
+          id: any;
+        }) => (
+          <li>
+            <article>
+              <a href="#">
+                <h3>{manga.attributes.title.en}</h3>
+              </a>
+              <div>
+                <p>{replaceDescription(manga.attributes.description.en)}</p>
+              </div>
+              <footer>
+                <a href={`/manga/${manga.id}`}>Read more</a>
+              </footer>
+            </article>
+          </li>
+        ),
+      )
+    }
+  </ul>
+</Fragment>
+
+<style>
+  ul {
+    margin-top: 2rem;
+    height: 100%;
+    width: 100%;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: minmax(100px, auto);
+    gap: 1rem;
+  }
+  li {
+    min-width: 300px;
+  }
+  article {
+    max-width: 100%;
+    background-color: rgba(62, 62, 62, 0.881);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 1rem;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.25),
+      0 1px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    a:not(:last-child) {
+      color: #fff;
+      text-decoration: none;
+    }
+    div {
+      height: max-content;
+      overflow-wrap: break-word;
+    }
+  }
+</style>
