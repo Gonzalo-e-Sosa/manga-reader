@@ -1,0 +1,59 @@
+---
+import "@/styles/index.css";
+import { SITE } from "../../site-config.js";
+import { ViewTransitions } from "astro:transitions";
+import Navigation from "@/components/Navigation.astro";
+import Footer from "@/components/Footer.astro";
+
+interface Props {
+  lang?: string;
+  title?: string;
+  viewTransitions?: boolean;
+}
+
+const { lang, title } = Astro.props;
+const viewTransitions = Astro.props.viewTransitions ?? true;
+---
+
+<!doctype html>
+<html lang={lang ?? SITE.DEFAULT_LANG}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    {viewTransitions && <ViewTransitions />}
+    <title>{title ?? SITE.TITLE}</title>
+  </head>
+  <body>
+    <Navigation />
+    <slot />
+    <Footer />
+  </body>
+</html>
+
+<style>
+  html {
+    scroll-behavior: smooth;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      "Open Sans",
+      "Helvetica Neue",
+      sans-serif;
+  }
+  body {
+    padding-inline: var(--padding-inline);
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding-inline: calc(var(--padding-inline) * 2);
+    }
+  }
+</style>
