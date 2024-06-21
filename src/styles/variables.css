@@ -1,0 +1,7 @@
+:root {
+  color-scheme: light dark;
+  --theme-text: #fff;
+  --theme-accent: #b8451f;
+  --theme-accent-hover: #ff5100;
+  --padding-inline: 2rem;
+}
