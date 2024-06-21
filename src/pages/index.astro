@@ -1,16 +1,107 @@
 ---
-
+import Base from "@/layouts/Base.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+  <main>
+    <div id="intro">
+      <h1>Manga Reader</h1>
+      <p>
+        Powered by <a href="https://mangadex.org/">MangaDex API</a>
+      </p>
+    </div>
+    <section id="manga-random">
+      <div>
+        <h2>Random manga</h2>
+        <p>Click the button below to get a random manga</p>
+      </div>
+
+      <button
+        hx-get="/partials/manga-random"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-target="#manga-random"
+      >
+        Get random manga
+      </button>
+    </section>
+    <!-- 
+    <section
+      id="manga-list"
+      hx-get="/partials/manga-list"
+      hx-trigger="load"
+      hx-swap="innerHTML"
+      hx-target="#manga-list"
+    >
+      <span id="loading">Loading...</span>
+    </section>
+    -->
+  </main>
+</Base>
+
+<style>
+  main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100dvh;
+    padding-block: 1.5rem;
+    gap: 2rem;
+  }
+  #intro {
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  #manga-random {
+    margin-top: 1rem;
+    max-width: calc(100dvw - var(--padding-x));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    div {
+      text-align: center;
+      display: flex;
+      gap: 0.5rem;
+      flex-direction: column;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background-color: var(--theme-accent);
+      color: var(--theme-text);
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--theme-accent-hover);
+      }
+    }
+  }
+  #manga-list {
+    width: 100%;
+    min-height: 100dvh;
+  }
+  #loading {
+    transition: all 0.2s ease-in-out;
+    animation: load 1s infinite;
+  }
+
+  @keyframes load {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
