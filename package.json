@@ -10,8 +10,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^4.11.0",
     "@astrojs/check": "^0.7.0",
+    "astro": "^4.11.0",
+    "astro-htmx": "^1.0.6",
+    "htmx.org": "^2.0.0",
     "typescript": "^5.5.2"
   }
 }
