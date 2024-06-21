@@ -1,0 +1,40 @@
+---
+import Logo from "./Logo.astro";
+import ToggleTheme from "./ToggleTheme.astro";
+---
+
+<nav>
+  <div>
+    <Logo />
+  </div>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/blog">Blog</a></li>
+  </ul>
+  <ToggleTheme theme />
+</nav>
+
+<style>
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  @media screen and (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+  }
+</style>
