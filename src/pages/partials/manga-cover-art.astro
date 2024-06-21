@@ -1,0 +1,21 @@
+---
+import {
+  getCoverArtData,
+  getCoverArtFilename,
+  getCoverArtImage,
+} from "@/services/fetchData";
+import { Image } from "astro:assets";
+
+interface Props {
+  mangaId: string;
+  coverArtId: string;
+}
+
+const { mangaId, coverArtId } = Astro.props;
+
+const coverArtRes = await getCoverArtData(coverArtId);
+const coverArtFilename = getCoverArtFilename(coverArtRes);
+const coverArtImage = getCoverArtImage(mangaId, coverArtFilename);
+---
+
+<Image src={coverArtImage} alt="Cover Art" width={300} height={300} loading={"eager"} />
