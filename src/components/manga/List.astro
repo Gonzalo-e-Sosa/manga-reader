@@ -1,0 +1,87 @@
+---
+import type { ListOptions } from "@/services/types";
+
+interface Props {
+  page: number;
+  params?: ListOptions;
+  get: string;
+  trigger: string;
+  swap: string;
+}
+
+const { page, get, params, trigger, swap } = Astro.props;
+
+const paramsString = Object.entries(params ?? {})
+  .map(([key, value]) => `${key}=${value}`)
+  .join("&");
+---
+
+<section
+  hx-get=`${get}?page=${page}${paramsString ? "&" + paramsString : ""}`
+  hx-trigger={trigger}
+  hx-swap={swap}
+  hx-target="#manga-list"
+>
+  <ul id="manga-list">
+    <span class="loading"><b>Loading...</b></span>
+  </ul>
+</section>
+
+<style>
+  section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  #manga-list {
+    list-style: none;
+    margin-top: 2rem;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: minmax(100px, auto);
+    gap: 2rem;
+    li {
+      justify-self: center;
+      height: 100%;
+      max-width: 12rem;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    #manga-list {
+      gap: 2rem 0;
+      li {
+        max-width: 16rem;
+      }
+    }
+  }
+</style>
+
+<style is:global>
+  .loading {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    animation: load 1s infinite;
+    grid-column: 1 / -1;
+  }
+
+  @keyframes load {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
