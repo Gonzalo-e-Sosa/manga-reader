@@ -3,6 +3,6 @@ import htmx from "astro-htmx";
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'hybrid',
+  output: 'server',
   integrations: [htmx()]
 });
