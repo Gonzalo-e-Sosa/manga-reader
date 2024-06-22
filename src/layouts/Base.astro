@@ -2,7 +2,9 @@
 import "@/styles/index.css";
 import { SITE } from "../../site-config.js";
 import { ViewTransitions } from "astro:transitions";
+import Logo from "@/components/Logo.astro";
 import Navigation from "@/components/Navigation.astro";
+import ToggleTheme from "@/components/ToggleTheme.astro";
 import Footer from "@/components/Footer.astro";
 
 interface Props {
@@ -25,7 +27,14 @@ const viewTransitions = Astro.props.viewTransitions ?? true;
     <title>{title ?? SITE.TITLE}</title>
   </head>
   <body>
-    <Navigation />
+    <header>
+      <Logo />
+      <Navigation />
+      <ToggleTheme theme={false} />
+    </header>
+    <main>
+      <slot name="main" />
+    </main>
     <slot />
     <Footer />
   </body>
@@ -47,13 +56,35 @@ const viewTransitions = Astro.props.viewTransitions ?? true;
       "Helvetica Neue",
       sans-serif;
   }
+  header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   body {
-    padding-inline: var(--padding-inline);
+    padding-block: calc(var(--padding-block) * 1.5);
+    padding-inline: calc(var(--padding-inline) * 1.5);
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100dvw;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   @media (max-width: 768px) {
     body {
-      padding-inline: calc(var(--padding-inline) * 2);
+      padding-block: var(--padding-block);
+      padding-inline: var(--padding-inline);
     }
   }
 </style>
