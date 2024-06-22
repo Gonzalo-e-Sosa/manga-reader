@@ -2,6 +2,7 @@
 import { getMangaRandomData } from "@/services/fetchData";
 import FlagJA from "@/components/icons/Japan.astro";
 import CoverArtImage from "./manga-cover-art.astro";
+import { getCoverArtId } from "@/utils/getId";
 
 const root = await getMangaRandomData();
 
@@ -67,9 +68,10 @@ function isNotAvailable(val: undefined | string) {
           {data.relationships && (
             <CoverArtImage
               mangaId={data.id}
-              coverArtId={
-                data.relationships.find((r) => r.type === "cover_art")?.id ?? ""
-              }
+              coverArtId={getCoverArtId(data)}
+              alt={attributes.title.en}
+              width={300}
+              height={300}
             />
           )}
         </div>
