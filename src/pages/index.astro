@@ -3,7 +3,7 @@ import Base from "@/layouts/Base.astro";
 ---
 
 <Base>
-  <main>
+  <Fragment slot={"main"}>
     <div id="intro">
       <h1>Manga Reader</h1>
       <p>
@@ -25,30 +25,10 @@ import Base from "@/layouts/Base.astro";
         Get random manga
       </button>
     </section>
-    <!-- 
-    <section
-      id="manga-list"
-      hx-get="/partials/manga-list"
-      hx-trigger="load"
-      hx-swap="innerHTML"
-      hx-target="#manga-list"
-    >
-      <span id="loading">Loading...</span>
-    </section>
-    -->
-  </main>
+  </Fragment>
 </Base>
 
 <style>
-  main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100dvh;
-    padding-block: 1.5rem;
-    gap: 2rem;
-  }
   #intro {
     display: flex;
     flex-direction: column;
@@ -82,26 +62,6 @@ import Base from "@/layouts/Base.astro";
       &:hover {
         background-color: var(--theme-accent-hover);
       }
-    }
-  }
-  #manga-list {
-    width: 100%;
-    min-height: 100dvh;
-  }
-  #loading {
-    transition: all 0.2s ease-in-out;
-    animation: load 1s infinite;
-  }
-
-  @keyframes load {
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
-    100% {
-      opacity: 1;
     }
   }
 </style>
