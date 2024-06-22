@@ -4,18 +4,32 @@ import {
   getCoverArtFilename,
   getCoverArtImage,
 } from "@/services/fetchData";
+import type { ThumbnailSize } from "@/services/types";
 import { Image } from "astro:assets";
 
 interface Props {
+  classlist?: string[];
   mangaId: string;
   coverArtId: string;
+  alt: string;
+  width: ThumbnailSize;
+  height: number | `${number}`;
+  loading?: "eager" | "lazy";
 }
 
-const { mangaId, coverArtId } = Astro.props;
+const { classlist, mangaId, coverArtId, alt, width, height, loading } =
+  Astro.props;
 
 const coverArtRes = await getCoverArtData(coverArtId);
 const coverArtFilename = getCoverArtFilename(coverArtRes);
-const coverArtImage = getCoverArtImage(mangaId, coverArtFilename);
+const coverArtImage = getCoverArtImage(mangaId, coverArtFilename, width);
 ---
 
-<Image src={coverArtImage} alt="Cover Art" width={300} height={300} loading={"eager"} />
+<Image
+  src={coverArtImage}
+  alt={alt}
+  width={width}
+  height={height}
+  loading={loading ?? "lazy"}
+  class={classlist?.join(" ")}
+/>
