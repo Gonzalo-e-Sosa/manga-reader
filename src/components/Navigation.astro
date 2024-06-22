@@ -1,35 +1,20 @@
----
-import Logo from "./Logo.astro";
-import ToggleTheme from "./ToggleTheme.astro";
----
-
 <nav>
-  <div>
-    <Logo />
-  </div>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
+    <li><a href="/manga">Manga</a></li>
     <li><a href="/about">About</a></li>
-    <li><a href="/blog">Blog</a></li>
   </ul>
-  <ToggleTheme theme />
 </nav>
 
 <style>
   nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
+    padding-inline: var(--padding-inline);
   }
   .nav-links {
     display: flex;
-    gap: 2rem;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
     list-style: none;
   }
   @media screen and (max-width: 768px) {
