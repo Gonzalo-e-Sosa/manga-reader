@@ -116,3 +116,25 @@ interface Chapter {
   data: string[]
   dataSaver: string[]
 }
+
+interface MangaListResponse extends BaseResponse {
+  data: MangaData[]
+  limit: number
+  offset: number
+  total: number
+}
+
+
+export interface ListOptions {
+  limit?: number
+  offset?: number
+  contentRating?: ContentRating
+  createdAtSince?: Date
+  updatedAtSince?: Date
+  coverArt?: boolean
+  artist?: boolean
+  author?: boolean
+  order?: boolean
+}
+
+type ContentRating = 'safe' | 'suggestive' | 'erotica' | 'pornographic';
