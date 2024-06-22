@@ -1,0 +1,85 @@
+---
+import { getMangaList } from "@/services/fetchData";
+import { getCoverArtId } from "@/utils/getId";
+import { getDescription } from "@/utils/strings";
+import MangaInfo from "@/components/manga/Info.astro";
+import type { ListOptions } from "@/services/types";
+
+export const partial = true;
+
+const RESULTS_PER_PAGE = 10;
+
+const page = Number(Astro.url.searchParams.get("page") ?? 1);
+const updatedAtSince = Astro.url.searchParams.get("updatedAtSince");
+
+const date = new Date();
+
+const params: ListOptions = {
+  contentRating: "safe",
+  updatedAtSince: updatedAtSince
+    ? new Date(updatedAtSince)
+    : new Date(
+        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() - date.getDay() - 1}`,
+      ),
+};
+
+const offset = (page - 1) * 10;
+
+const res = await getMangaList({
+  limit: RESULTS_PER_PAGE,
+  offset,
+  contentRating: params.contentRating,
+  updatedAtSince: params.updatedAtSince,
+});
+
+const { data: Mangas } = res;
+
+let url = `/partials/manga-list/results?page=${page + 1}`;
+
+Object.entries(params).forEach(([key, value]) => {
+  url += `&${key}=${value}`;
+});
+---
+
+<Fragment>
+  {
+    Array.isArray(Mangas) &&
+      Mangas.map((manga, index) => (
+        <li>
+          <a
+            class="manga-info"
+            href={`/manga/${manga.id}`}
+            title={manga.attributes.title.en}
+          >
+            <MangaInfo
+              title={manga.attributes.title.en}
+              description={getDescription(manga.attributes)}
+              mangaId={manga.id}
+              coverArtId={getCoverArtId(manga)}
+              alt={manga.attributes.title.en}
+              width={256}
+              height={350}
+              loading={index <= 3 ? "eager" : "lazy"}
+            />
+          </a>
+        </li>
+      ))
+  }
+  <span
+    class="loading"
+    hx-get={url}
+    hx-trigger="revealed"
+    hx-target=".loading"
+    hx-swap="outerHTML transition:true"
+  >
+    <b>Loading...</b>
+  </span>
+</Fragment>
+
+<style is:inline>
+  .manga-info {
+    text-decoration: none;
+    max-width: inherit;
+    height: 100%;
+  }
+</style>
