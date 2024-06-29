@@ -1,0 +1,59 @@
+---
+import { getCoverArtData } from "@/services/fetchData";
+import {
+  getCoverArtFilename,
+  getCoverArtImage,
+  type ThumbnailSize,
+} from "@/utils/get";
+import { Image, Picture } from "astro:assets";
+
+interface Props {
+  class?: string | string[];
+  mangaId: string;
+  coverArtId?: string;
+  coverArtFileName?: string;
+  alt: string;
+  width: ThumbnailSize;
+  height?: number | `${number}`;
+  loading?: "eager" | "lazy";
+}
+
+const {
+  class: className,
+  mangaId,
+  coverArtId,
+  coverArtFileName = "",
+  alt,
+  width,
+  height,
+  loading,
+} = Astro.props;
+
+const getImageSrc = async () => {
+  if (coverArtId && !coverArtFileName) {
+    const { data } = await getCoverArtData(coverArtId);
+    const filename = getCoverArtFilename(data);
+    return getCoverArtImage(mangaId, filename, width);
+  }
+  return getCoverArtImage(mangaId, coverArtFileName, width);
+};
+
+const coverArtImage = await getImageSrc();
+---
+
+{
+  coverArtImage ? (
+    <Picture
+      class={Array.isArray(className) ? className.join("; ") : className}
+      src={coverArtImage}
+      alt={alt}
+      loading={loading ?? "lazy"}
+      width={width}
+      height={height}
+      inferSize={true}
+      formats={["webp", "jpeg"]}
+    />
+  ) : (
+    <span>Not found</span>
+  )
+}
