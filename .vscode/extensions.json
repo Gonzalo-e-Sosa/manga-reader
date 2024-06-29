@@ -2,7 +2,10 @@
   "recommendations": [
     "astro-build.astro-vscode",
     "CraigRBroughton.htmx-attributes",
-    "otovo-oss.htmx-tags"
+    "otovo-oss.htmx-tags",
+    "bradlc.vscode-tailwindcss",
+    "YoavBls.pretty-ts-errors",
+    "dbaeumer.vscode-eslint"
   ],
   "unwantedRecommendations": []
 }
