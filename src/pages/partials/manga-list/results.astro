@@ -1,20 +1,26 @@
 ---
 import { getMangaList } from "@/services/fetchData";
-import { getCoverArtId } from "@/utils/getId";
-import { getDescription } from "@/utils/strings";
-import MangaInfo from "@/components/manga/Info.astro";
-import type { ListOptions } from "@/services/types";
+import { getCoverArtFilename } from "@/utils/get";
+import { mapMangaData } from "@/utils/map";
+import type { MangaListOptions } from "@/services/types";
+import Card from "@/components/manga/Card.astro";
+import { PATH_TO_PARTIALS } from "@/consts";
 
 export const partial = true;
 
 const RESULTS_PER_PAGE = 10;
 
+// Get url params
 const page = Number(Astro.url.searchParams.get("page") ?? 1);
+const limit = Number(Astro.url.searchParams.get("limit") ?? RESULTS_PER_PAGE);
 const updatedAtSince = Astro.url.searchParams.get("updatedAtSince");
 
 const date = new Date();
 
-const params: ListOptions = {
+const options: MangaListOptions = {
+  offset: (page - 1) * 10,
+  limit,
+  coverArt: true,
   contentRating: "safe",
   updatedAtSince: updatedAtSince
     ? new Date(updatedAtSince)
@@ -23,63 +29,43 @@ const params: ListOptions = {
       ),
 };
 
-const offset = (page - 1) * 10;
+const res = await getMangaList(options);
 
-const res = await getMangaList({
-  limit: RESULTS_PER_PAGE,
-  offset,
-  contentRating: params.contentRating,
-  updatedAtSince: params.updatedAtSince,
-});
+const { data } = res;
+const mangas = mapMangaData(data);
 
-const { data: Mangas } = res;
+let nextPage = `${PATH_TO_PARTIALS}/manga-list/results?page=${page + 1}`;
 
-let url = `/partials/manga-list/results?page=${page + 1}`;
-
-Object.entries(params).forEach(([key, value]) => {
-  url += `&${key}=${value}`;
+// Add options to url
+Object.entries(options).forEach(([key, value]) => {
+  nextPage += `&${key}=${value}`;
 });
 ---
 
-<Fragment>
-  {
-    Array.isArray(Mangas) &&
-      Mangas.map((manga, index) => (
-        <li>
-          <a
-            class="manga-info"
-            href={`/manga/${manga.id}`}
-            title={manga.attributes.title.en}
-          >
-            <MangaInfo
-              title={manga.attributes.title.en}
-              description={getDescription(manga.attributes)}
-              mangaId={manga.id}
-              coverArtId={getCoverArtId(manga)}
-              alt={manga.attributes.title.en}
-              width={256}
-              height={350}
-              loading={index <= 3 ? "eager" : "lazy"}
-            />
-          </a>
-        </li>
-      ))
-  }
-  <span
-    class="loading"
-    hx-get={url}
-    hx-trigger="revealed"
-    hx-target=".loading"
-    hx-swap="outerHTML transition:true"
-  >
-    <b>Loading...</b>
-  </span>
-</Fragment>
-
-<style is:inline>
-  .manga-info {
-    text-decoration: none;
-    max-width: inherit;
-    height: 100%;
-  }
-</style>
+{
+  Array.isArray(mangas) &&
+    mangas.map((manga, index) => (
+      <li class="self-center">
+        <a href={`/manga/${manga.id}`} title={manga.title}>
+          <Card
+            title={manga.title}
+            description={manga.description}
+            mangaId={manga.id}
+            coverArtFilename={getCoverArtFilename(manga)}
+            alt={manga.title + " cover art"}
+            width={256}
+            loading={index < RESULTS_PER_PAGE ? "eager" : "lazy"}
+          />
+        </a>
+      </li>
+    ))
+}
+<span
+  class="htmx-indicator loading"
+  hx-get={nextPage}
+  hx-trigger="revealed"
+  hx-target=".loading"
+  hx-swap="outerHTML transition:true settle:500ms scroll:true show:top"
+>
+  <b>Loading...</b>
+</span>
