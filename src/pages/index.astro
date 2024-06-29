@@ -1,15 +1,15 @@
 ---
-import Base from "@/layouts/Base.astro";
+import BaseLayout from "@/layouts/Base.astro";
 ---
 
-<Base>
+<BaseLayout>
   <Fragment slot={"main"}>
-    <div id="intro">
+    <section id="intro">
       <h1>Manga Reader</h1>
       <p>
         Powered by <a href="https://mangadex.org/">MangaDex API</a>
       </p>
-    </div>
+    </section>
     <section id="manga-random">
       <div>
         <h2>Random manga</h2>
@@ -17,7 +17,7 @@ import Base from "@/layouts/Base.astro";
       </div>
 
       <button
-        hx-get="/partials/manga-random"
+        hx-get="/partials/random"
         hx-trigger="click"
         hx-swap="innerHTML"
         hx-target="#manga-random"
@@ -26,7 +26,7 @@ import Base from "@/layouts/Base.astro";
       </button>
     </section>
   </Fragment>
-</Base>
+</BaseLayout>
 
 <style>
   #intro {
@@ -35,10 +35,9 @@ import Base from "@/layouts/Base.astro";
     place-content: center;
     gap: 0.5rem;
     text-align: center;
+    margin-bottom: 1rem;
   }
   #manga-random {
-    margin-top: 1rem;
-    max-width: calc(100dvw - var(--padding-x));
     display: flex;
     flex-direction: column;
     justify-content: center;
