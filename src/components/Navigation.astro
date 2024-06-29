@@ -1,21 +1,33 @@
+---
+const paths = await Astro.glob("../pages/*.astro");
+---
+
 <nav>
   <ul class="nav-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="/manga">Manga</a></li>
-    <li><a href="/about">About</a></li>
+    {
+      paths &&
+        paths.map((path) => (
+          <li>
+            <a class="nav-link" href={path.url}>
+              {path.url ? path.url.slice(1).toLocaleUpperCase() : "HOME"}
+            </a>
+          </li>
+        ))
+    }
   </ul>
 </nav>
 
 <style>
-  nav {
-    padding-inline: var(--padding-inline);
-  }
   .nav-links {
     display: flex;
     justify-content: space-around;
     align-items: center;
     gap: 1rem;
     list-style: none;
+
+    .nav-link {
+      @apply text-base font-bold;
+    }
   }
   @media screen and (max-width: 768px) {
     .nav-links {
