@@ -2,71 +2,82 @@
 // dataSaver contains the id of the image compressed
 
 import { ENDPOINTS } from "@/consts";
-import type { CoverResponse, ThumbnailSize, ChapterResponse, MangaResponse, MangaListResponse, ListOptions } from "./types";
+import type { CoverResponse, ChapterResponse, MangaResponse, MangaListResponse, MangaListOptions } from "./types";
+
+class FetchError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'FetchError';
+  }
+}
 
 export const getMangaData = async (id: string): Promise<MangaResponse> => {
-  const res = await fetch(`${ENDPOINTS.MANGA}/${id}`);
-
-  return (await res.json());
+  try {
+    const res = await fetch(`${ENDPOINTS.MANGA}/${id}`);
+    return (await res.json());
+  } catch (err) {
+    throw new FetchError('Manga not found');
+  }
 }
 
 export const getMangaRandomData = async (): Promise<MangaResponse> => {
-  const res = await fetch(ENDPOINTS.MANGA_RANDOM);
-
-  return (await res.json());
+  try {
+    const res = await fetch(ENDPOINTS.MANGA_RANDOM);
+    return (await res.json());
+  } catch (err) {
+    throw new FetchError('Manga random not found');
+  }
 }
 
 export const getAuthorData = async (id: string) => {
-  const res = await fetch(`${ENDPOINTS.AUTHOR}/${id}`);
-
-  return (await res.json());
+  try {
+    const res = await fetch(`${ENDPOINTS.AUTHOR}/${id}`);
+    return (await res.json());
+  } catch (err) {
+    throw new FetchError('Author not found');
+  }
 }
 
 export const getCoverArtData = async (id: string): Promise<CoverResponse> => {
-  const res = await fetch(`${ENDPOINTS.COVER_ART}/${id}`);
-
-  return (await res.json());
+  try {
+    const res = await fetch(`${ENDPOINTS.COVER_ART}/${id}`);
+    return (await res.json());
+  } catch (err) {
+    throw new FetchError('Cover art not found');
+  }
 }
-
-export const getCoverArtFilename = (res: CoverResponse) => {
-  return res.data.attributes.fileName;
-}
-
-// cover image
-// default width size is unknown but if you need it you can use the thumbnailSize parameter
-
-export const getCoverArtImage = (mangaId: string, coverArtFilename: string, thumbnailSize?: ThumbnailSize) => {
-  const width = thumbnailSize ? `.${thumbnailSize}.jpg` : '';
-
-  return `${ENDPOINTS.COVER_ART_IMAGE}/${mangaId}/${coverArtFilename}${width}`;
-}
-
 
 // chapters images
 export const getChapterImagesData = async (chapterId: string): Promise<ChapterResponse> => {
-  const res = await fetch(
-    `${ENDPOINTS.CHAPTER_IMAGES}/${chapterId}`
-  );
-
-  return (await res.json());
+  try {
+    const res = await fetch(
+      `${ENDPOINTS.CHAPTER_IMAGES}/${chapterId}`
+    );
+    return (await res.json());
+  } catch (err) {
+    throw new FetchError('Chapter images data not found');
+  }
 }
 
 export const getPageImage = async (hash: string, pageId: string, dataSaver = true) => {
-  const image = await fetch(
-    `${ENDPOINTS.UPLOADS}/${dataSaver ? 'dataSaver' : 'data'}/${hash}/${pageId}`
-  )
-  return image;
+  try {
+    const image = await fetch(`${ENDPOINTS.UPLOADS}/${dataSaver ? 'dataSaver' : 'data'}/${hash}/${pageId}`)
+    return image;
+  } catch (err) {
+    throw new FetchError('Page image not found');
+  }
 }
 
 /*
+Example url:
 `https://api.mangadex.org/manga?includes[]=cover_art&includes[]=artist&includes[]=author&order[followedCount]=desc&contentRating[]=safe&hasAvailableChapters=true&createdAtSince=${encodeURIComponent(dateTime)`
 */
 
-export const createMangaListURL = (options?: ListOptions, baseURL = ENDPOINTS.MANGA_LIST) => {
+export const createMangaListURL = (options?: MangaListOptions, baseURL = ENDPOINTS.MANGA_LIST): URL => {
   const INCLUDES = 'includes[]';
   const url = new URL(baseURL);
 
-  if (!options) return url.toString();
+  if (!options) return url;
 
   const { limit, offset, contentRating, createdAtSince, updatedAtSince, coverArt, artist, author, order } = options;
 
@@ -88,10 +99,14 @@ export const createMangaListURL = (options?: ListOptions, baseURL = ENDPOINTS.MA
 
   if (updatedAtSince) url.searchParams.append('updatedAtSince', updatedAtSince.toISOString().slice(0, -5));
 
-  return url.toString();
+  return url;
 }
 
-export const getMangaList = async (options?: ListOptions): Promise<MangaListResponse> => {
-  const res = await fetch(createMangaListURL(options));
-  return (await res.json());
+export const getMangaList = async (options?: MangaListOptions): Promise<MangaListResponse> => {
+  try {
+    const res = await fetch(createMangaListURL(options).toString());
+    return (await res.json());
+  } catch (err) {
+    throw new FetchError('Manga collection not found');
+  }
 }
