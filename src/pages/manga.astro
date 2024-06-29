@@ -1,27 +1,18 @@
 ---
+import BaseLayout from "@/layouts/Base.astro";
 import List from "@/components/manga/List.astro";
-import Base from "@/layouts/Base.astro";
+import { PATH_TO_PARTIALS } from "@/consts.js";
 ---
 
-<Base>
+<BaseLayout>
   <Fragment slot={"main"}>
-    <header>
-      <h1>Manga List</h1>
-    </header>
-    <List
-      page={1}
-      get="/partials/manga-list/results"
-      params={{}}
-      trigger="load"
-      swap="innerHTML transition:true"
-    />
+    <h1 class="mt-4 md:text-center">Manga List</h1>
+    <section class="mt-4 w-full flex flex-column justify-center items-center">
+      <List
+        get=`${PATH_TO_PARTIALS}/manga-list/results`
+        params={{}}
+        trigger="load"
+      />
+    </section>
   </Fragment>
-</Base>
-
-<style>
-  @media screen and (max-width: 768px) {
-    header h1 {
-      text-align: center;
-    }
-  }
-</style>
+</BaseLayout>
