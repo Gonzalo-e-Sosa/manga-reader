@@ -1,0 +1,52 @@
+---
+import type { ThumbnailSize } from "@/utils/get";
+import CoverArt from "@/pages/partials/cover-art.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  mangaId: string;
+  coverArtId?: string;
+  coverArtFilename?: string;
+  alt: string;
+  width: ThumbnailSize;
+  height?: number;
+  loading: "lazy" | "eager";
+}
+
+const {
+  title,
+  description,
+  mangaId,
+  coverArtId,
+  coverArtFilename,
+  alt,
+  width,
+  height,
+  loading,
+} = Astro.props;
+---
+
+<article
+  class="h-auto flex justify-center items-center shadow-xl hover:shadow-2xl"
+>
+  <CoverArt
+    class:list={["h-auto", "rounded-2xl", "card"]}
+    mangaId={mangaId}
+    coverArtId={coverArtId}
+    coverArtFileName={coverArtFilename}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+  />
+</article>
+
+<style>
+  .card {
+    mask-image: linear-gradient(black 80%, transparent);
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+</style>
