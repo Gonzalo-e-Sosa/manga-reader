@@ -1,0 +1,13 @@
+---
+import Logo from "@/components/Logo.astro";
+import Navigation from "@/components/Navigation.astro";
+import ToggleTheme from "@/components/ToggleTheme.astro";
+---
+
+<header
+  class="sticky top-0 left-0 z-50 px-10 py-4 w-full flex flex-row items-center justify-between"
+>
+  <Logo />
+  <Navigation />
+  <ToggleTheme theme={false} />
+</header>
