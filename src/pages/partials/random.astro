@@ -1,0 +1,90 @@
+---
+import CoverArt from "./cover-art.astro";
+import { getMangaRandomData } from "@/services/fetchData";
+import { getCoverArtId } from "@/utils/get";
+import { mapMangaDataSingle } from "@/utils/map";
+
+const res = await getMangaRandomData();
+const { result, response, data } = res;
+
+const manga = mapMangaDataSingle(data);
+---
+
+{
+  result === "ok" ? (
+    <article>
+      <div id="title">
+        <h1>{manga.title}</h1>
+        <h2>Other title</h2>
+      </div>
+      <div id="info">
+        <div>
+          <CoverArt
+            mangaId={manga.id}
+            coverArtId={getCoverArtId(manga)}
+            alt={manga.title}
+            width={256}
+            height={256}
+          />
+        </div>
+      </div>
+      <div id="tags">
+        <ul>
+          {manga.tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  ) : (
+    <p>{response}</p>
+  )
+}
+
+<style>
+  article {
+    width: 100%;
+    padding: 0.5rem 0;
+    display: grid;
+    place-content: center;
+    gap: 0.5rem;
+
+    #title > h1,
+    #title > h2 {
+      text-align: center;
+    }
+
+    #info {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+      gap: 1.5rem;
+
+      div p {
+        text-align: left;
+        font-size: 1.2rem;
+        line-height: 1.4;
+      }
+
+      div img {
+        width: 100%;
+      }
+    }
+  }
+  #tags {
+    width: 100%;
+    ul {
+      display: flex;
+      flex-direction: row;
+      gap: 0.25rem;
+      align-self: end;
+      list-style: none;
+
+      li {
+        background-color: var(--theme-accent);
+        color: var(--theme-text);
+        padding: 0.25rem 0.3rem;
+        border-radius: 5px;
+      }
+    }
+  }
+</style>
