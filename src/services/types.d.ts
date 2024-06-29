@@ -1,131 +1,37 @@
-interface BaseResponse {
-  result: string
-  response: string
+import { CoverData } from "../types/cover_art";
+import { MangaData } from "../types/manga";
+import { Chapter as ChapterData } from "../types/chapter";
+
+type ApiResult = "ok" | "error";
+type ApiResponse = "entity" | "collection";
+type ApiData = CoverData | MangaData | MangaData[]
+type DataType = "manga" | "cover_art";
+
+interface BaseResponse<R extends ApiResponse, D extends ApiData> {
+  result: ApiResult
+  response?: R
+  data: D
 }
 
-export interface MangaResponse extends BaseResponse {
-  data: MangaData
+export interface MangaResponse extends BaseResponse<"entity", MangaData> {
 }
 
-interface MangaData {
-  id: string
-  type: string
-  attributes: MangaAttributes
-  relationships: Relationship[]
+export interface CoverResponse extends BaseResponse<"entity", CoverData> {
 }
 
-interface MangaAttributes {
-  title: Title
-  altTitles: AltTitle[]
-  description: Description
-  isLocked: boolean
-  links: Links
-  originalLanguage: string
-  lastVolume: string
-  lastChapter: string
-  publicationDemographic: string
-  status: string
-  year: number
-  contentRating: string
-  tags: Tag[]
-  state: string
-  chapterNumbersResetOnNewVolume: boolean
-  createdAt: string
-  updatedAt: string
-  version: number
-  availableTranslatedLanguages: any[]
-  latestUploadedChapter: any
-}
-
-export interface Title {
-  en: string
-}
-
-export interface AltTitle {
-  "ja-ro"?: string
-  ja?: string
-}
-
-export interface Description {
-  en: string
-}
-
-export interface Links {
-  mu: string
-}
-
-export interface Tag {
-  id: string
-  type: string
-  attributes: Attributes2
-  relationships: Relationship[]
-}
-
-export interface Attributes2 {
-  name: Name
-  description: any[]
-  group: string
-  version: number
-}
-
-export interface Name {
-  en: string
-}
-
-export interface Relationship {
-  id: string
-  type: string
-}
-
-export interface CoverResponse extends BaseResponse {
-  data: {
-    id: string
-    type: string
-    attributes: {
-      description: string
-      volume: string
-      fileName: string
-      locale: string
-      createdAt: string
-      updatedAt: string
-      version: number
-    }
-    relationships: {
-      manga: {
-        id: string
-        type: string
-      }
-      user: {
-        id: string
-        type: string
-      }
-    }
-  }
-}
-
-export type ThumbnailSize = 256 | 512;
-
-export interface ChapterResponse {
-  result: string
-  baseUrl: string
-  chapter: Chapter
-}
-
-interface Chapter {
-  hash: string
-  data: string[]
-  dataSaver: string[]
-}
-
-interface MangaListResponse extends BaseResponse {
-  data: MangaData[]
+export interface MangaListResponse extends BaseResponse<"collection", MangaData[]> {
   limit: number
   offset: number
   total: number
 }
 
+export interface ChapterResponse {
+  result: string
+  baseUrl: string
+  chapter: ChapterData
+}
 
-export interface ListOptions {
+export interface MangaListOptions {
   limit?: number
   offset?: number
   contentRating?: ContentRating
@@ -137,4 +43,4 @@ export interface ListOptions {
   order?: boolean
 }
 
-type ContentRating = 'safe' | 'suggestive' | 'erotica' | 'pornographic';
+type ContentRating = 'safe' | 'suggestive' | 'erotica';
