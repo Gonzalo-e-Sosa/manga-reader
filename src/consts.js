@@ -18,3 +18,5 @@ export const ENDPOINTS = {
   CHAPTER_IMAGES: URL_CHAPTER_IMAGES,
   UPLOADS: UPLOADS_BASE_URL
 }
+
+export const PATH_TO_PARTIALS = "/partials";
