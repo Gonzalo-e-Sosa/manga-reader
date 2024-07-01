@@ -1,46 +1,41 @@
-import { CoverData } from "../types/cover_art";
-import { MangaData } from "../types/manga";
-import { Chapter as ChapterData } from "../types/chapter";
-
-type ApiResult = "ok" | "error";
-type ApiResponse = "entity" | "collection";
-type ApiData = CoverData | MangaData | MangaData[]
-type DataType = "manga" | "cover_art";
-
-interface BaseResponse<R extends ApiResponse, D extends ApiData> {
-  result: ApiResult
-  response?: R
-  data: D
-}
-
-export interface MangaResponse extends BaseResponse<"entity", MangaData> {
-}
-
-export interface CoverResponse extends BaseResponse<"entity", CoverData> {
-}
-
-export interface MangaListResponse extends BaseResponse<"collection", MangaData[]> {
-  limit: number
-  offset: number
-  total: number
-}
-
-export interface ChapterResponse {
-  result: string
-  baseUrl: string
-  chapter: ChapterData
-}
-
 export interface MangaListOptions {
   limit?: number
   offset?: number
+  title?: string
+  authorOrArtist?: string
+  authors?: Array<string>
+  artist?: Array<string>
+  year?: Date //release year
+  includedTags?: Array<string>
+  includedTagsMode?: string // 'AND' | 'OR' -> Default: OR
+  excludedTags?: Array<string>
+  excludedTagsMode?: string // 'AND' | 'OR' -> Default: OR
+  status?: Status
+  originalLanguage?: Array<string>
+  excludedOriginalLanguage?: Array<string>
+  availableTranslatedLanguage?: Array<string>
+  publicationDemographic?: PublicationDemographic
+  ids?: Array<string> // limited to 100 per request
   contentRating?: ContentRating
   createdAtSince?: Date
   updatedAtSince?: Date
-  coverArt?: boolean
-  artist?: boolean
-  author?: boolean
-  order?: boolean
+  order?: string // Default value : OrderedMap { "latestUploadedChapter": "desc" }
+  includes?: {
+    manga?: boolean
+    coverArt?: boolean
+    author?: boolean
+    artist?: boolean
+    tag?: boolean
+    creator?: boolean
+  }
+  hasAvailableChapters?: HasAvailableChapters
+  group?: string
 }
 
-type ContentRating = 'safe' | 'suggestive' | 'erotica';
+type Status = "ongoing" | "completed" | "hiatus" | "cancelled";
+
+type PublicationDemographic = "shounen" | "shoujo" | "josei" | "seinen" | "none";
+
+type ContentRating = 'safe' | 'suggestive' | 'erotica'; // Default value -> ["safe", "suggestive", "erotica"]
+
+type HasAvailableChapters = "0" | "1" | "true" | "false";
