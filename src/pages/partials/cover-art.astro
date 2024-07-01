@@ -5,7 +5,7 @@ import {
   getCoverArtImage,
   type ThumbnailSize,
 } from "@/utils/get";
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 
 interface Props {
   class?: string | string[];
@@ -14,7 +14,7 @@ interface Props {
   coverArtFileName?: string;
   alt: string;
   width: ThumbnailSize;
-  height?: number | `${number}`;
+  height: number | `${number}`;
   loading?: "eager" | "lazy";
 }
 
@@ -50,7 +50,6 @@ const coverArtImage = await getImageSrc();
       loading={loading ?? "lazy"}
       width={width}
       height={height}
-      inferSize={true}
       formats={["webp", "jpeg"]}
     />
   ) : (

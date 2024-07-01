@@ -13,25 +13,28 @@ const RESULTS_PER_PAGE = 10;
 // Get url params
 const page = Number(Astro.url.searchParams.get("page") ?? 1);
 const limit = Number(Astro.url.searchParams.get("limit") ?? RESULTS_PER_PAGE);
+/*
 const updatedAtSince = Astro.url.searchParams.get("updatedAtSince");
-
 const date = new Date();
+*/
 
 const options: MangaListOptions = {
   offset: (page - 1) * 10,
   limit,
-  coverArt: true,
+  includes: {
+    coverArt: true,
+  },
   contentRating: "safe",
-  updatedAtSince: updatedAtSince
+  /*updatedAtSince: updatedAtSince
     ? new Date(updatedAtSince)
     : new Date(
-        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() - date.getDay() - 1}`,
-      ),
+        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() - date.getDay() + 1}`,
+      ),*/
 };
 
 const res = await getMangaList(options);
-
 const { data } = res;
+
 const mangas = mapMangaData(data);
 
 let nextPage = `${PATH_TO_PARTIALS}/manga-list/results?page=${page + 1}`;
@@ -54,6 +57,7 @@ Object.entries(options).forEach(([key, value]) => {
             coverArtFilename={getCoverArtFilename(manga)}
             alt={manga.title + " cover art"}
             width={256}
+            height={350}
             loading={index < RESULTS_PER_PAGE ? "eager" : "lazy"}
           />
         </a>
