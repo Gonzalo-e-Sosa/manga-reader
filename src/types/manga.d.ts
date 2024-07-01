@@ -1,13 +1,6 @@
-import { Relationship } from "./relationship"
+import type { AuthorAttributes } from "./author"
 
-interface MangaData {
-  id: string
-  type: "manga"
-  attributes: MangaAttributes
-  relationships: Relationship<"author" | "artist" | "cover_art">[]
-}
-
-interface MangaAttributes {
+export interface MangaAttributes {
   title: Title
   altTitles: AltTitle[]
   description: Description
@@ -28,6 +21,11 @@ interface MangaAttributes {
   version: number
   availableTranslatedLanguages: string[]
   latestUploadedChapter: string
+}
+export interface MangaRelationship {
+  id: string
+  type: "author" | "artist" | "cover_art"
+  attributes?: Array<AuthorAttributes | ArtistAttributes | CoverAttributes>
 }
 
 export interface Title {

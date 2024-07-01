@@ -20,3 +20,9 @@ export interface AuthorAttributes {
   updatedAt: string,
   version: number
 }
+
+export interface AuthorRelationship {
+  id: string
+  type: "manga"
+  attributes?: MangaAttributes
+}

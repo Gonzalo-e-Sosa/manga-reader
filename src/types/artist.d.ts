@@ -20,3 +20,7 @@ export interface ArtistAttributes {
   updatedAt: string,
   version: number
 }
+
+export interface ArtistRelationship{
+  
+}

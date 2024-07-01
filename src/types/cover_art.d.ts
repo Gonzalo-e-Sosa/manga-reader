@@ -1,10 +1,3 @@
-export interface CoverData {
-  id: string
-  type: "cover_art"
-  attributes: CoverAttributes
-  relationships: Relationship
-}
-
 export interface CoverAttributes {
   description: string
   volume: string
@@ -15,7 +8,7 @@ export interface CoverAttributes {
   version: number
 }
 
-interface Relationship {
+export interface CoverRelationship {
   manga: {
     id: string
     type: string
