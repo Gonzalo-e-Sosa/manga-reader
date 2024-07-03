@@ -22,10 +22,11 @@ export interface MangaAttributes {
   availableTranslatedLanguages: string[]
   latestUploadedChapter: string
 }
+
 export interface MangaRelationship {
   id: string
   type: "author" | "artist" | "cover_art"
-  attributes?: Array<AuthorAttributes | ArtistAttributes | CoverAttributes>
+  attributes?: AuthorAttributes | ArtistAttributes | CoverAttributes | Array<AuthorAttributes | ArtistAttributes | CoverAttributes>
 }
 
 export interface Title {
