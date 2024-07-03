@@ -1,0 +1,23 @@
+---
+import BaseLayout from "@/layouts/Base.astro";
+import { getChapterImagesData } from "@/services/fetchData";
+import PageList from "@/components/chapter/PageList.astro";
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/");
+}
+
+const { chapter } = await getChapterImagesData(id);
+---
+
+<BaseLayout>
+  <Fragment slot="main">
+    <PageList
+      useDataSaver={true}
+      pages={chapter.dataSaver}
+      hash={chapter.hash}
+    />
+  </Fragment>
+</BaseLayout>
