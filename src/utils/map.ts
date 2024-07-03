@@ -1,4 +1,4 @@
-import type { MangaData } from "@/types/manga";
+import type { MangaData } from "@/types/response";
 import { getCoverArtFilename, getDescription } from "./get";
 
 export interface MangaMappedData {
