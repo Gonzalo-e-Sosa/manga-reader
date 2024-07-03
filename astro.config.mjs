@@ -11,7 +11,15 @@ export default defineConfig({
     remotePatterns: [{
       protocol: 'https',
       hostname: 'uploads.mangadex.org',
-      pathname: '/covers/**'
+      pathname: '/covers/**',
+    }, {
+      protocol: 'https',
+      hostname: 'uploads.mangadex.org',
+      pathname: '/data/**',
+    }, {
+      protocol: 'https',
+      hostname: 'uploads.mangadex.org',
+      pathname: '/data-saver/**',
     }]
   }
 });
