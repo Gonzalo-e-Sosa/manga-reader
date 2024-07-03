@@ -1,0 +1,18 @@
+---
+interface Props {
+  currentChapter: number;
+  prevChapterId: string;
+  nextChapterId: string;
+}
+
+const { currentChapter, prevChapterId, nextChapterId } = Astro.props;
+---
+
+<!-- TODO: Check if there is a prev chapter or is there a next chapter before rendering -->{
+  (
+    <>
+      <a href={`/chapter/${prevChapterId}`}>Chapter {currentChapter - 1}</a>
+      <a href={`/chapter/${nextChapterId}`}>Chapter {currentChapter + 1}</a>
+    </>
+  )
+}
