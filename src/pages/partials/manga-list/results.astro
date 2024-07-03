@@ -5,6 +5,7 @@ import { mapMangaData } from "@/utils/map";
 import type { MangaListOptions } from "@/services/types";
 import Card from "@/components/manga/Card.astro";
 import { PATH_TO_PARTIALS } from "@/consts";
+import type { MangaData } from "@/types/response";
 
 export const partial = true;
 
@@ -54,7 +55,7 @@ Object.entries(options).forEach(([key, value]) => {
             title={manga.title}
             description={manga.description}
             mangaId={manga.id}
-            coverArtFilename={getCoverArtFilename(manga)}
+            coverArtFilename={getCoverArtFilename(manga as unknown as MangaData)}
             alt={manga.title + " cover art"}
             width={256}
             height={350}

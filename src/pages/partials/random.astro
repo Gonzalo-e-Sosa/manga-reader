@@ -1,4 +1,5 @@
 ---
+import type { MangaRelationship } from "@/types/manga";
 import CoverArt from "./cover-art.astro";
 import { getMangaRandomData } from "@/services/fetchData";
 import { getCoverArtId } from "@/utils/get";
@@ -21,7 +22,9 @@ const manga = mapMangaDataSingle(data);
         <div>
           <CoverArt
             mangaId={manga.id}
-            coverArtId={getCoverArtId(manga)}
+            coverArtId={getCoverArtId(
+              manga.relationships as MangaRelationship[],
+            )}
             alt={manga.title}
             width={256}
             height={256}
