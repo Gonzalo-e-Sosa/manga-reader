@@ -1,0 +1,32 @@
+---
+import { getPageImage } from "@/services/fetchData";
+import { Image } from "astro:assets";
+
+interface Props {
+  pages: Array<string>;
+  hash: string;
+  useDataSaver: boolean;
+}
+
+const { pages, hash, useDataSaver = true } = Astro.props;
+---
+
+{
+  useDataSaver
+    ? pages.map((page) => (
+        <Image
+          src={getPageImage(hash, page, true)}
+          alt={"Page image"}
+          inferSize={true}
+          format="jpeg"
+        />
+      ))
+    : pages.map((page) => (
+        <Image
+          src={getPageImage(hash, page, false)}
+          alt={"Page image"}
+          inferSize={true}
+          format="webp"
+        />
+      ))
+}
