@@ -48,7 +48,7 @@ export const getCoverArtData = async (id: string): Promise<ResponseCover> => {
   }
 }
 
-export const getMangaChapterFeed = async (mangaId: string) => {
+export const getMangaChapterFeed = async (mangaId: string): Promise<ResponseChapterFeed> => {
   try {
     const res = await fetch(`${ENDPOINTS.MANGA}/${mangaId}/feed`);
     return (await res.json());
@@ -69,9 +69,9 @@ export const getChapterImagesData = async (chapterId: string): Promise<ResponseC
   }
 }
 
-export const getPageImage = async (hash: string, pageId: string, dataSaver = true) => {
+export const getPageImage = (hash: string, pageId: string, dataSaver = true) => {
   try {
-    const image = await fetch(`${ENDPOINTS.UPLOADS}/${dataSaver ? 'dataSaver' : 'data'}/${hash}/${pageId}`)
+    const image = (`${ENDPOINTS.UPLOADS}/${dataSaver ? 'data-saver' : 'data'}/${hash}/${pageId}`)
     return image;
   } catch (err) {
     throw new FetchError('Page image not found');
