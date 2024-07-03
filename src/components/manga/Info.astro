@@ -2,6 +2,8 @@
 import { getCoverArtId } from "@/utils/get";
 import CoverArt from "@/pages/partials/cover-art.astro";
 import { type MangaMappedData } from "@/utils/map";
+import type { MangaRelationship } from "@/types/manga";
+
 
 interface Props {
   data: MangaMappedData;
@@ -10,23 +12,18 @@ interface Props {
 const { data: manga } = Astro.props;
 ---
 
-<section 
-  class="grid grid-cols-2 gap-4 items-start"
->
+<section class="grid grid-cols-2 gap-4 items-start">
   <div>
     <h1>{manga.title}</h1>
     <p>{manga.description}</p>
     <ul>
       {manga.tags.map((tag) => <li>{tag}</li>)}
     </ul>
-    <p>
-      {JSON.stringify(manga)}
-    </p>
   </div>
   <div>
     <CoverArt
       mangaId={manga.id}
-      coverArtId={getCoverArtId(manga)}
+      coverArtId={getCoverArtId(manga.relationships as MangaRelationship[])}
       alt={manga.title}
       width={256}
       height={300}
