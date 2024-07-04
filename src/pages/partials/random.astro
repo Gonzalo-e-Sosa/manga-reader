@@ -1,5 +1,4 @@
 ---
-import type { MangaRelationship } from "@/types/manga";
 import CoverArt from "./cover-art.astro";
 import { getMangaRandomData } from "@/services/fetchData";
 import { getCoverArtId } from "@/utils/get";
@@ -15,17 +14,15 @@ const manga = mapMangaDataSingle(data);
   result === "ok" ? (
     <article>
       <div id="title">
-        <h1>{manga.title}</h1>
+        <h1>{manga.attributes.title}</h1>
         <h2>Other title</h2>
       </div>
       <div id="info">
         <div>
           <CoverArt
             mangaId={manga.id}
-            coverArtId={getCoverArtId(
-              manga.relationships as MangaRelationship[],
-            )}
-            alt={manga.title}
+            coverArtId={getCoverArtId(manga.relationships)}
+            alt={manga.attributes.title}
             width={256}
             height={256}
           />
@@ -33,7 +30,7 @@ const manga = mapMangaDataSingle(data);
       </div>
       <div id="tags">
         <ul>
-          {manga.tags.map((tag) => (
+          {manga.attributes.tags.map((tag) => (
             <li>{tag}</li>
           ))}
         </ul>

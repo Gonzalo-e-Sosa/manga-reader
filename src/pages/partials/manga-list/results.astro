@@ -1,11 +1,8 @@
 ---
-import { getMangaList } from "@/services/fetchData";
-import { getCoverArtFilename } from "@/utils/get";
-import { mapMangaData } from "@/utils/map";
 import type { MangaListOptions } from "@/services/types";
 import Card from "@/components/manga/Card.astro";
 import { PATH_TO_PARTIALS } from "@/consts";
-import type { MangaData } from "@/types/response";
+import { createFetchMangaRepository } from "@/modules/Manga/infrastructure/FetchMangaRepository";
 
 export const partial = true;
 
@@ -14,10 +11,6 @@ const RESULTS_PER_PAGE = 10;
 // Get url params
 const page = Number(Astro.url.searchParams.get("page") ?? 1);
 const limit = Number(Astro.url.searchParams.get("limit") ?? RESULTS_PER_PAGE);
-/*
-const updatedAtSince = Astro.url.searchParams.get("updatedAtSince");
-const date = new Date();
-*/
 
 const options: MangaListOptions = {
   offset: (page - 1) * 10,
@@ -26,17 +19,10 @@ const options: MangaListOptions = {
     coverArt: true,
   },
   contentRating: "safe",
-  /*updatedAtSince: updatedAtSince
-    ? new Date(updatedAtSince)
-    : new Date(
-        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() - date.getDay() + 1}`,
-      ),*/
 };
 
-const res = await getMangaList(options);
-const { data } = res;
-
-const mangas = mapMangaData(data);
+const fetchMangaRepository = createFetchMangaRepository();
+const mangas = await fetchMangaRepository.getAll(options);
 
 let nextPage = `${PATH_TO_PARTIALS}/manga-list/results?page=${page + 1}`;
 
@@ -48,15 +34,18 @@ Object.entries(options).forEach(([key, value]) => {
 
 {
   Array.isArray(mangas) &&
-    mangas.map((manga, index) => (
+    mangas.map(({ id, attributes, relationships }, index) => (
       <li class="self-center">
-        <a href={`/manga/${manga.id}`} title={manga.title}>
+        <a href={`/manga/${id}`} title={attributes.title}>
           <Card
-            title={manga.title}
-            description={manga.description}
-            mangaId={manga.id}
-            coverArtFilename={getCoverArtFilename(manga as unknown as MangaData)}
-            alt={manga.title + " cover art"}
+            title={attributes.title}
+            description={attributes.description}
+            mangaId={id}
+            coverArtFilename={
+              relationships.find((r) => r.type === "cover_art")?.attributes
+                ?.fileName
+            }
+            alt={attributes.title + " cover art"}
             width={256}
             height={350}
             loading={index < RESULTS_PER_PAGE ? "eager" : "lazy"}

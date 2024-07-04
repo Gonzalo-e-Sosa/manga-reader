@@ -1,30 +1,29 @@
 ---
-import { getCoverArtId } from "@/utils/get";
 import CoverArt from "@/pages/partials/cover-art.astro";
-import { type MangaMappedData } from "@/utils/map";
-import type { MangaRelationship } from "@/types/manga";
-
+import type { Manga } from "@/modules/Manga/domain/Manga";
+import { getCoverArtId } from "@/utils/get";
 
 interface Props {
-  data: MangaMappedData;
+  manga: Manga;
 }
 
-const { data: manga } = Astro.props;
+const { manga } = Astro.props;
+const { attributes } = manga;
 ---
 
 <section class="grid grid-cols-2 gap-4 items-start">
   <div>
-    <h1>{manga.title}</h1>
-    <p>{manga.description}</p>
+    <h1>{attributes.title}</h1>
+    <p>{attributes.description}</p>
     <ul>
-      {manga.tags.map((tag) => <li>{tag}</li>)}
+      {attributes.tags.map((tag) => <li>{tag}</li>)}
     </ul>
   </div>
   <div>
     <CoverArt
       mangaId={manga.id}
-      coverArtId={getCoverArtId(manga.relationships as MangaRelationship[])}
-      alt={manga.title}
+      coverArtId={getCoverArtId(manga.relationships)}
+      alt={manga.attributes.title}
       width={256}
       height={300}
     />

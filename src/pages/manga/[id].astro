@@ -1,10 +1,10 @@
 ---
 import Base from "@/layouts/Base.astro";
 import MangaInfo from "@/components/manga/Info.astro";
-import { getMangaChapterFeed, getMangaData } from "@/services/fetchData";
-import { mapMangaDataSingle } from "@/utils/map";
+import { getMangaChapterFeed } from "@/services/fetchData";
 import { orderMangaChapters } from "@/utils/order";
 import ChaptersFeed from "@/components/manga/ChaptersFeed.astro";
+import { createFetchMangaRepository } from "@/modules/Manga/infrastructure/FetchMangaRepository";
 
 const { id } = Astro.params;
 
@@ -12,8 +12,7 @@ if (!id) {
   return Astro.redirect("/");
 }
 
-const { data } = await getMangaData(id);
-const mappedData = mapMangaDataSingle(data);
+const manga = await createFetchMangaRepository().getById(id);
 
 const { data: dataChapterFeed } = await getMangaChapterFeed(id);
 const chapters = orderMangaChapters(dataChapterFeed);
@@ -21,7 +20,7 @@ const chapters = orderMangaChapters(dataChapterFeed);
 
 <Base>
   <Fragment slot="main">
-    <MangaInfo data={mappedData} />
+    <MangaInfo manga={manga} />
   </Fragment>
   <ChaptersFeed chapters={chapters} />
 </Base>
