@@ -8,7 +8,7 @@ const paths = await Astro.glob("../pages/*.astro");
       paths &&
         paths.map((path) => (
           <li>
-            <a class="nav-link" href={path.url}>
+            <a class="nav-link" href={path.url === "" ? "/" : path.url}>
               {path.url ? path.url.slice(1).toLocaleUpperCase() : "HOME"}
             </a>
           </li>
