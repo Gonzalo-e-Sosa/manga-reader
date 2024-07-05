@@ -5,10 +5,9 @@ interface Props {
   page?: number;
   get: string;
   params?: MangaListOptions;
-  trigger: string;
 }
 
-const { get, params, trigger } = Astro.props;
+const { get, params } = Astro.props;
 
 const page = Astro.props.page ?? 1;
 
@@ -19,13 +18,7 @@ const paramsString = Object.entries(params ?? {})
 const url = `${get}?page=${page}${paramsString ? "&" + paramsString : ""}`;
 ---
 
-<ul
-  id="manga-list"
-  hx-get={url}
-  hx-trigger={trigger}
-  hx-target="#manga-list"
-  hx-swap="innerHTML transition:true scroll:top"
->
+<ul id="manga-list" hx-get={url} hx-trigger="load" hx-swap="innerHTML transition:true scroll:top">
   <span class="htmx-indicator loading"><b>Loading...</b></span>
 </ul>
 
