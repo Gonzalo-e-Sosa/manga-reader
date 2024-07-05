@@ -3,7 +3,7 @@
 
 import { ENDPOINTS } from "@/consts";
 import type { ResponseChapter, ResponseChapterFeed, ResponseCover, ResponseManga, ResponseMangaList } from "../types/response";
-import type { MangaListOptions } from "./types";
+import type { MangaListOptions, MangaOptions } from "./types";
 
 class FetchError extends Error {
   constructor(message: string) {
@@ -12,9 +12,13 @@ class FetchError extends Error {
   }
 }
 
-export const getMangaData = async (id: string): Promise<ResponseManga> => {
+export const getMangaData = async (id: string, options?: MangaOptions): Promise<ResponseManga> => {
   try {
-    const res = await fetch(`${ENDPOINTS.MANGA}/${id}`);
+    const url = new URL(`${ENDPOINTS.MANGA}/${id}`);
+    if (options) {
+      Object.values(options).filter(value => value).forEach(value => url.searchParams.append('includes[]', value));
+    }
+    const res = await fetch(url);
     return (await res.json());
   } catch (err) {
     throw new FetchError('Manga not found');
@@ -124,24 +128,12 @@ export const createMangaListURL = (options?: MangaListOptions, baseURL = ENDPOIN
     group*/
   } = options;
 
+  if (offset === 0 || offset) url.searchParams.append('offset', offset.toString());
+
   if (limit) url.searchParams.append(`limit`, limit.toString());
 
-  if (offset) url.searchParams.append('offset', offset.toString());
-
   if (includes) {
-    const { artist, author, creator, coverArt, tag, manga } = includes;
-
-    if (artist) url.searchParams.append(INCLUDES, 'artist');
-
-    if (author) url.searchParams.append(INCLUDES, 'author');
-
-    if (creator) url.searchParams.append(INCLUDES, 'creator')
-
-    if (coverArt) url.searchParams.append(INCLUDES, 'cover_art');
-
-    if (tag) url.searchParams.append(INCLUDES, 'tag');
-
-    if (manga) url.searchParams.append(INCLUDES, 'manga');
+    Object.values(includes).filter(value => value).forEach(value => url.searchParams.append(INCLUDES, value));
   }
 
   if (order) url.searchParams.append('order[followedCount]', 'desc');
@@ -157,13 +149,10 @@ export const createMangaListURL = (options?: MangaListOptions, baseURL = ENDPOIN
 }
 
 export const getMangaList = async (options?: MangaListOptions): Promise<ResponseMangaList> => {
-  try {
-    const res = await fetch(createMangaListURL(options).toString());
-    if (!res.ok) {
-      throw new FetchError('Error fetching the url');
-    }
-    return (await res.json());
-  } catch (err) {
-    throw new FetchError('Manga collection not found');
+  const res = await fetch(createMangaListURL(options).toString());
+  if (!res.ok || res.status !== 200) {
+    const error = await res.json();
+    throw { message: error.message, status: error.cod };
   }
+  return (await res.json());
 }
