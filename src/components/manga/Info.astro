@@ -1,31 +1,87 @@
 ---
 import CoverArt from "@/pages/partials/cover-art.astro";
 import type { Manga } from "@/modules/Manga/domain/Manga";
-import { getCoverArtId } from "@/utils/get";
 
 interface Props {
   manga: Manga;
 }
 
 const { manga } = Astro.props;
-const { attributes } = manga;
 ---
 
-<section class="grid grid-cols-2 gap-4 items-start">
+<section
+  aria-label="Manga Information"
+  class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start"
+>
   <div>
-    <h1>{attributes.title}</h1>
-    <p>{attributes.description}</p>
-    <ul>
-      {attributes.tags.map((tag) => <li>{tag}</li>)}
-    </ul>
+    <figure class="grid grid-cols-2 gap-4">
+      <CoverArt
+        class={{ picture: [""], image: ["rounded", "shadow"] }}
+        mangaId={manga.id}
+        coverArtFileName={manga.coverArtFileName}
+        alt={manga.title}
+        width={256}
+        height={300}
+        loading="eager"
+      />
+      <figcaption>
+        <h1 class="text-lg">{manga.title}</h1>
+        <!-- Add stats like views, likes, and comments -->
+      </figcaption>
+    </figure>
+    <footer class="mt-4">
+      <h3 class="text-base">Tags</h3>
+      <ul class="mb-2 flex flex-wrap gap-2">
+        {
+          manga.tags.map((tag) => (
+            <li class="py-0.5 px-1 rounded text-xs font-bold bg-[#303030]">
+              {tag}
+            </li>
+          ))
+        }
+      </ul>
+      <h3 class="mb-0 text-base">Status</h3>
+      <span class="text-xs">
+        <time datetime={manga.updatedAt}>{manga.year}</time>,
+        <span
+          class={manga.status === "completed"
+            ? "text-gray-500"
+            : manga.status === "ongoing"
+              ? "text-green-500"
+              : "text-red-500"}
+        >
+          {new String(manga.status).toLocaleUpperCase()}
+        </span>
+      </span>
+    </footer>
   </div>
-  <div>
-    <CoverArt
-      mangaId={manga.id}
-      coverArtId={getCoverArtId(manga.relationships)}
-      alt={manga.attributes.title}
-      width={256}
-      height={300}
-    />
-  </div>
+  <!-- CTA buttons: read, download, save -->
+  <section aria-label="Actions" class="flex items-center gap-2 flex-nowrap">
+    <button class="py-1 flex-grow-[2] rounded bg-[--theme-accent]">Read</button>
+    <button class="py-1 flex-grow rounded bg-[#4f4f4f]">Download</button>
+    <button class="py-1 flex-grow rounded bg-[#4f4f4f]">Save</button>
+  </section>
+  <section aria-label="Description">
+    <h2>Description</h2>
+    <p>{manga.description}</p>
+  </section>
+  <section aria-label="Relationships">
+    Author <h3>{manga.author}</h3>
+    Artist <h3>{manga.artist}</h3>
+  </section>
+  <section aria-label="Alternative Titles">
+    <h3>Alternative Titles</h3>
+    {
+      manga.altTitles.map((title) => {
+        const [lang] = Object.keys(title);
+        const [altTitle] = Object.values(title);
+        return (
+          <>
+            <span>{lang}</span>
+            <h4>{altTitle}</h4>
+          </>
+        );
+      })
+    }
+  </section>
 </section>
