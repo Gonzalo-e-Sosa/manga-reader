@@ -1,8 +1,8 @@
-import type { MangaListOptions } from "@/services/types";
+import type { MangaListOptions, MangaOptions } from "@/services/types";
 import type { Manga } from "./Manga"
 
 export interface MangaRepository {
-  getById(id: string): Promise<Manga>;
+  getById(id: string, options?: MangaOptions): Promise<Manga>;
   getSingleBySimilarTitle(similarTitle: string): Promise<Manga>;
   getSingleByStatus(status: string): Promise<Manga>;
   getSingleByYear(year: Date): Promise<Manga>;

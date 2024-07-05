@@ -3,27 +3,26 @@ type ContentRating = 'safe' | 'suggestive' | 'erotica';
 
 export interface Manga {
   id: string
-  attributes: {
-    title: string
-    description: string
-    tags: string[]
-    year: number
-    contentRating: ContentRating
-    status: Status
-    lastVolume: string
-    lastChapter: string
-    originalLanguage: string
-    publicationDemographic: string
-    createdAt: string
-    updatedAt: string
-    availableTranslatedLanguages: string[]
-    latestUploadedChapter: string
-  }
-  relationships: Array<{
-    id: string
-    type: string
-    attributes?: { fileName?: string }
-  }>
+  title: string
+  altTitles: {
+    [key: string]: string
+  }[]
+  description: string
+  tags: string[]
+  year: number
+  contentRating: ContentRating
+  status: Status
+  lastVolume: string
+  lastChapter: string
+  originalLanguage: string
+  publicationDemographic: string
+  createdAt: string
+  updatedAt: string
+  availableTranslatedLanguages: string[]
+  latestUploadedChapter: string
+  author: string
+  artist: string
+  coverArtFileName: string
 }
 
 export function ensureIsValidStatus(status: string): Status {
