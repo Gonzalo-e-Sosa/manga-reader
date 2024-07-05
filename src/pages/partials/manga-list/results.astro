@@ -1,7 +1,7 @@
 ---
 import type { MangaListOptions } from "@/services/types";
 import Card from "@/components/manga/Card.astro";
-import { PATH_TO_PARTIALS } from "@/consts";
+import { createMangaService } from "@/modules/Manga/application/MangaService";
 import { createFetchMangaRepository } from "@/modules/Manga/infrastructure/FetchMangaRepository";
 
 export const partial = true;
@@ -15,16 +15,13 @@ const limit = Number(Astro.url.searchParams.get("limit") ?? RESULTS_PER_PAGE);
 const options: MangaListOptions = {
   offset: (page - 1) * 10,
   limit,
-  includes: {
-    coverArt: true,
-  },
   contentRating: "safe",
 };
 
-const fetchMangaRepository = createFetchMangaRepository();
-const mangas = await fetchMangaRepository.getAll(options);
+const MangaRepository = createFetchMangaRepository();
+const mangas = await createMangaService(MangaRepository).getAll(options);
 
-let nextPage = `${PATH_TO_PARTIALS}/manga-list/results?page=${page + 1}`;
+let nextPage = `/partials/manga-list/results?page=${page + 1}`;
 
 // Add options to url
 Object.entries(options).forEach(([key, value]) => {
@@ -34,18 +31,15 @@ Object.entries(options).forEach(([key, value]) => {
 
 {
   Array.isArray(mangas) &&
-    mangas.map(({ id, attributes, relationships }, index) => (
+    mangas.map((manga, index) => (
       <li class="self-center">
-        <a href={`/manga/${id}`} title={attributes.title}>
+        <a href={`/manga/${manga.id}`} title={manga.title}>
           <Card
-            title={attributes.title}
-            description={attributes.description}
-            mangaId={id}
-            coverArtFilename={
-              relationships.find((r) => r.type === "cover_art")?.attributes
-                ?.fileName
-            }
-            alt={attributes.title + " cover art"}
+            title={manga.title}
+            description={manga.description}
+            mangaId={manga.id}
+            coverArtFilename={manga.coverArtFileName}
+            alt={manga.title + " cover art"}
             width={256}
             height={350}
             loading={index < RESULTS_PER_PAGE ? "eager" : "lazy"}
@@ -59,7 +53,7 @@ Object.entries(options).forEach(([key, value]) => {
   hx-get={nextPage}
   hx-trigger="revealed"
   hx-target=".loading"
-  hx-swap="outerHTML transition:true settle:500ms scroll:true show:top"
+  hx-swap="outerHTML transition:true settle:500ms show:top scroll:true"
 >
   <b>Loading...</b>
 </span>
