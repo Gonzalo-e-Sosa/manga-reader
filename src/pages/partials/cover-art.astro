@@ -8,7 +8,7 @@ import {
 import { Picture } from "astro:assets";
 
 interface Props {
-  class?: string | string[];
+  class?: { picture: string[]; image: string[] };
   mangaId: string;
   coverArtId?: string;
   coverArtFileName?: string;
@@ -44,7 +44,8 @@ const coverArtImage = await getImageSrc();
 {
   coverArtImage ? (
     <Picture
-      class={Array.isArray(className) ? className.join("; ") : className}
+      pictureAttributes={className && { class: className.picture.join(" ") }}
+      class={className && className.image.join(" ")}
       src={coverArtImage}
       alt={alt}
       loading={loading ?? "lazy"}
