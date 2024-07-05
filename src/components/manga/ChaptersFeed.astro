@@ -8,19 +8,21 @@ interface Props {
 const { chapters: chaptersData } = Astro.props;
 ---
 
-<ul class="px-4 flex flex-col items-center justify-center gap-2">
-  {
-    chaptersData &&
-      chaptersData.map(({ id, attributes }) => (
-        <a
-          href={`/chapter/${id}`}
-          class="w-full transition-colors bg-gray-900 hover:bg-gray-800"
-        >
-          <li class="w-full p-2 ">
-            Chapter {attributes.chapter}{" "}
-            <span>{attributes.translatedLanguage}</span>
-          </li>
-        </a>
-      ))
-  }
-</ul>
+<section class="mt-4">
+  <ul class="px-4 flex flex-col items-center justify-center gap-2">
+    {
+      chaptersData &&
+        chaptersData.map(({ id, attributes }) => (
+          <a
+            href={`/chapter/${id}`}
+            class="w-full transition-colors bg-gray-900 hover:bg-gray-800"
+          >
+            <li class="w-full p-2 ">
+              Chapter {attributes.chapter}{" "}
+              <span>{attributes.translatedLanguage}</span>
+            </li>
+          </a>
+        ))
+    }
+  </ul>
+</section>
