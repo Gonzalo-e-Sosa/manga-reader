@@ -1,3 +1,16 @@
+import type { ContentRating, Status } from "@/types/manga";
+
+interface Options {
+  manga?: "manga"
+  coverArt?: "cover_art"
+  author?: "author"
+  artist?: "artist"
+  tag?: "tag"
+  creator?: "creator"
+}
+
+export interface MangaOptions extends Options { }
+
 export interface MangaListOptions {
   limit?: number
   offset?: number
@@ -20,22 +33,12 @@ export interface MangaListOptions {
   createdAtSince?: Date
   updatedAtSince?: Date
   order?: string // Default value : OrderedMap { "latestUploadedChapter": "desc" }
-  includes?: {
-    manga?: boolean
-    coverArt?: boolean
-    author?: boolean
-    artist?: boolean
-    tag?: boolean
-    creator?: boolean
-  }
+  includes?: Options
   hasAvailableChapters?: HasAvailableChapters
   group?: string
 }
 
-type Status = "ongoing" | "completed" | "hiatus" | "cancelled";
 
-type PublicationDemographic = "shounen" | "shoujo" | "josei" | "seinen" | "none";
+export type PublicationDemographic = "shounen" | "shoujo" | "josei" | "seinen" | "none";
 
-type ContentRating = 'safe' | 'suggestive' | 'erotica'; // Default value -> ["safe", "suggestive", "erotica"]
-
-type HasAvailableChapters = "0" | "1" | "true" | "false";
+export type HasAvailableChapters = "0" | "1" | "true" | "false";
