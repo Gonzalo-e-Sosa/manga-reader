@@ -1,66 +1,16 @@
 ---
 import BaseLayout from "@/layouts/Base.astro";
+import List from "@/components/manga/List.astro";
 ---
 
 <BaseLayout>
   <Fragment slot={"main"}>
-    <section id="intro">
-      <h1>Manga Reader</h1>
-      <p>
-        Powered by <a href="https://mangadex.org/">MangaDex API</a>
-      </p>
-    </section>
-    <section id="manga-random">
-      <div>
-        <h2>Random manga</h2>
-        <p>Click the button below to get a random manga</p>
-      </div>
-
-      <button
-        hx-get="/partials/random"
-        hx-trigger="click"
-        hx-swap="innerHTML"
-        hx-target="#manga-random"
-      >
-        Get random manga
-      </button>
+    <h1 class="mt-4 md:text-center">Manga List</h1>
+    <section class="flex items-center justify-center w-full mt-4 flex-column">
+      <List
+        get="/partials/manga-list/results"
+        params={{}}
+      />
     </section>
   </Fragment>
 </BaseLayout>
-
-<style>
-  #intro {
-    display: flex;
-    flex-direction: column;
-    place-content: center;
-    gap: 0.5rem;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  #manga-random {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    div {
-      text-align: center;
-      display: flex;
-      gap: 0.5rem;
-      flex-direction: column;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 0.5rem;
-      border: none;
-      background-color: var(--theme-accent);
-      color: var(--theme-text);
-      transition: all 0.2s ease-in-out;
-      cursor: pointer;
-      &:hover {
-        background-color: var(--theme-accent-hover);
-      }
-    }
-  }
-</style>
