@@ -4,6 +4,7 @@ import MangaInfo from "@/components/manga/Info.astro";
 import { getMangaChapterFeed } from "@/services/fetchData";
 import { orderMangaChapters } from "@/utils/order";
 import ChaptersFeed from "@/components/manga/ChaptersFeed.astro";
+import { createMangaService } from "@/modules/Manga/application/MangaService";
 import { createFetchMangaRepository } from "@/modules/Manga/infrastructure/FetchMangaRepository";
 
 const { id } = Astro.params;
@@ -12,7 +13,8 @@ if (!id) {
   return Astro.redirect("/");
 }
 
-const manga = await createFetchMangaRepository().getById(id);
+const MangaRepository = createFetchMangaRepository();
+const manga = await createMangaService(MangaRepository).getById(id);
 
 const { data: dataChapterFeed } = await getMangaChapterFeed(id);
 const chapters = orderMangaChapters(dataChapterFeed);
