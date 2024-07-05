@@ -1,5 +1,9 @@
 import type { AuthorAttributes } from "./author"
 
+export type Status = "ongoing" | "completed" | "hiatus" | "cancelled";
+
+export type ContentRating = 'safe' | 'suggestive' | 'erotica'; // Default value -> ["safe", "suggestive", "erotica"]
+
 export interface MangaAttributes {
   title: Title
   altTitles: AltTitle[]
@@ -10,9 +14,9 @@ export interface MangaAttributes {
   lastVolume: string
   lastChapter: string
   publicationDemographic: string
-  status: string
+  status: Status
   year: number
-  contentRating: string
+  contentRating: ContentRating
   tags: Tag[]
   state: string
   chapterNumbersResetOnNewVolume: boolean
