@@ -13,20 +13,22 @@ const { pages, hash, useDataSaver = true } = Astro.props;
 
 {
   useDataSaver
-    ? pages.map((page) => (
+    ? pages.map((page, index) => (
         <Image
           src={getPageImage(hash, page, true)}
           alt={"Page image"}
           inferSize={true}
           format="jpeg"
+          loading={index < 5 ? "eager" : "lazy"}
         />
       ))
-    : pages.map((page) => (
+    : pages.map((page, index) => (
         <Image
           src={getPageImage(hash, page, false)}
           alt={"Page image"}
           inferSize={true}
           format="webp"
+          loading={index < 5 ? "eager" : "lazy"}
         />
       ))
 }
