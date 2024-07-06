@@ -1,0 +1,32 @@
+---
+import Card from "@/components/manga/Card.astro";
+import { createMangaService } from "@/modules/Manga/application/MangaService";
+import { createFetchMangaRepository } from "@/modules/Manga/infrastructure/FetchMangaRepository";
+
+const url = new URL(Astro.request.url);
+const title = url.searchParams.get("title");
+
+const MangaRepository = createFetchMangaRepository();
+const mangas = await createMangaService(
+  MangaRepository,
+).getCollectionBySimilarTitle(title?.toString() ?? "");
+---
+
+{
+  mangas.map((manga, index) => (
+    <li>
+      <a href={`/manga/${manga.id}`} title={manga.title}>
+        <Card
+          title={manga.title}
+          description={manga.description}
+          mangaId={manga.id}
+          coverArtFilename={manga.coverArtFileName}
+          alt={manga.title + " cover art"}
+          width={256}
+          height={350}
+          loading={index < 5 ? "eager" : "lazy"}
+        />
+      </a>
+    </li>
+  ))
+}
