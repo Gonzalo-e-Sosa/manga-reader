@@ -48,8 +48,8 @@ export function mapMangaDataCollection(data: MangaData[]): Manga[] {
       availableTranslatedLanguages: manga.attributes.availableTranslatedLanguages,
       latestUploadedChapter: manga.attributes.latestUploadedChapter,
       coverArtFileName: data[index].relationships.find(r => r.type === "cover_art")?.attributes.fileName,
-      author: data[index].relationships.find(r => r.type === "author")?.attributes.name,
-      artist: data[index].relationships.find(r => r.type === "artist")?.attributes.name
+      author: data[index].relationships.find(r => r.type === "author")?.attributes?.name,
+      artist: data[index].relationships.find(r => r.type === "artist")?.attributes?.name
     }
   });
 }

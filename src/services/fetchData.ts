@@ -104,7 +104,7 @@ export const createMangaListURL = (options?: MangaListOptions, baseURL = ENDPOIN
   const {
     limit,
     offset,
-    /*title,
+    title,/*
     authorOrArtist,
     authors,
     artist,
@@ -130,7 +130,9 @@ export const createMangaListURL = (options?: MangaListOptions, baseURL = ENDPOIN
 
   if (offset === 0 || offset) url.searchParams.append('offset', offset.toString());
 
-  if (limit) url.searchParams.append(`limit`, limit.toString());
+  if (limit) url.searchParams.append('limit', limit.toString());
+
+  if (title) url.searchParams.append('title', title);
 
   if (includes) {
     Object.values(includes).filter(value => value).forEach(value => url.searchParams.append(INCLUDES, value));
