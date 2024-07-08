@@ -1,5 +1,10 @@
 ---
 import CoverArt from "@/pages/partials/cover-art.astro";
+import Actions from "@/components/manga/Actions.astro";
+import Tags from "@/components/manga/Tags.astro";
+import Status from "@/components/manga/Status.astro";
+import Stats from "@/components/manga/Stats.astro";
+import AltTitles from "@/components/manga/AltTitles.astro";
 import type { Manga } from "@/modules/Manga/domain/Manga";
 
 interface Props {
@@ -7,59 +12,49 @@ interface Props {
 }
 
 const { manga } = Astro.props;
+const subtitle = manga.altTitles?.find((title) => Object.hasOwn(title, "en"))[
+  "en"
+];
 ---
 
-<section
-  aria-label="Manga Information"
-  class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start"
->
-  <div>
-    <figure class="grid grid-cols-2 gap-4">
+<Fragment>
+  <section
+    aria-label="Manga Information"
+    class="grid grid-rows-[auto,1fr] grid-cols-[1fr,2fr] sm:grid-cols-[auto,1fr] md:grid-rows-2 md:gap-x-4 gap-y-2 gap-x-2"
+  >
+    <figure
+      class="row-start-1 row-end-2 md:row-span-full h-fit relative top-0 left-0"
+    >
       <CoverArt
         class={{ picture: [""], image: ["rounded", "shadow"] }}
         mangaId={manga.id}
         coverArtFileName={manga.coverArtFileName}
         alt={manga.title}
         width={256}
-        height={300}
+        height={350}
         loading="eager"
       />
-      <figcaption>
-        <h1 class="text-lg">{manga.title}</h1>
-        <!-- Add stats like views, likes, and comments -->
+      <figcaption class="absolute bottom-2 right-2">
+        {manga.originalLanguage}
       </figcaption>
     </figure>
-    <footer class="mt-4">
-      <h3 class="text-base">Tags</h3>
-      <ul class="mb-2 flex flex-wrap gap-2">
-        {
-          manga.tags.map((tag) => (
-            <li class="py-0.5 px-1 rounded text-xs font-bold bg-[#303030]">
-              {tag}
-            </li>
-          ))
-        }
-      </ul>
-      <h3 class="mb-0 text-base">Status</h3>
-      <span class="text-xs">
-        <time datetime={manga.updatedAt}>{manga.year}</time>,
-        <span
-          class={manga.status === "completed"
-            ? "text-gray-500"
-            : manga.status === "ongoing"
-              ? "text-green-500"
-              : "text-red-500"}
-        >
-          {new String(manga.status).toLocaleUpperCase()}
-        </span>
-      </span>
-    </footer>
-  </div>
-  <!-- CTA buttons: read, download, save -->
-  <section aria-label="Actions" class="flex items-center gap-2 flex-nowrap">
-    <button class="py-1 flex-grow-[2] rounded bg-[--theme-accent]">Read</button>
-    <button class="py-1 flex-grow rounded bg-[#4f4f4f]">Download</button>
-    <button class="py-1 flex-grow rounded bg-[#4f4f4f]">Save</button>
+    <div class="row-start-1 row-span-1 md:row-auto">
+      <h1
+        class="text-lg font-extrabold mb-0 sm:mb-2 sm:text-4xl md:text-5xl lg:text-6xl"
+      >
+        {manga.title}
+      </h1>
+      {subtitle && <h2 class="text-sm">{subtitle}</h2>}
+      <h3 class="text-sm mb-0">{manga.author}</h3>
+    </div>
+    <div
+      class="col-span-full grid grid-rows-[repeat(4,auto)] items-center gap-y-2 md:col-span-1 md:gap-y-1"
+    >
+      <Tags tags={manga.tags} />
+      <Status year={manga.year} status={manga.status} />
+      <Stats comments={1} saves={1} stars={2} viewed />
+      <Actions />
+    </div>
   </section>
   <section aria-label="Description">
     <h2>Description</h2>
@@ -70,18 +65,6 @@ const { manga } = Astro.props;
     Artist <h3>{manga.artist}</h3>
   </section>
   <section aria-label="Alternative Titles">
-    <h3>Alternative Titles</h3>
-    {
-      manga.altTitles.map((title) => {
-        const [lang] = Object.keys(title);
-        const [altTitle] = Object.values(title);
-        return (
-          <>
-            <span>{lang}</span>
-            <h4>{altTitle}</h4>
-          </>
-        );
-      })
-    }
+    <AltTitles titles={manga.altTitles} />
   </section>
-</section>
+</Fragment>
