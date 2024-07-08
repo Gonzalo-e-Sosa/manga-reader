@@ -1,0 +1,23 @@
+---
+import type { Manga } from "@/modules/Manga/domain/Manga";
+
+interface Props {
+  year: number;
+  status: Pick<Manga, "status">["status"];
+}
+
+const { year, status } = Astro.props;
+---
+
+<span class="text-xs">
+  <time datetime={year.toString()}>{year}</time>,
+  <span
+    class={status === "completed"
+      ? "text-gray-500"
+      : status === "ongoing"
+        ? "text-green-500"
+        : "text-red-500"}
+  >
+    {new String(status).toLocaleUpperCase()}
+  </span>
+</span>

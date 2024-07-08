@@ -1,0 +1,14 @@
+---
+interface Props {
+  stars: number;
+  saves: number;
+  comments: number;
+  viewed: boolean;
+}
+
+const { stars, saves, comments, viewed = false } = Astro.props;
+---
+
+<span>
+  Stars: {stars} Saves: {saves} Comments: {comments} Viewed: {viewed}
+</span>

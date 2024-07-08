@@ -1,0 +1,22 @@
+---
+interface Props {
+  titles: { [key:string]: string }[]
+}
+
+const { titles } = Astro.props;
+---
+
+
+<h3>Alternative Titles</h3>
+{
+  titles.map((title) => {
+    const [lang] = Object.keys(title);
+    const [altTitle] = Object.values(title);
+    return (
+      <>
+        <span>{lang}</span>
+        <h4>{altTitle}</h4>
+      </>
+    );
+  })
+}

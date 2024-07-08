@@ -1,0 +1,21 @@
+<!-- CTA buttons: read, download, save -->
+<form
+  aria-label="Actions"
+  class="row-start-1 row-span-1 md:-row-start-2 md:row-span-1 flex items-center gap-2 flex-nowrap"
+>
+  <button class="btn read">Read</button>
+  <button class="btn">Save</button>
+  <button class="btn">Download</button>
+</form>
+
+<style>
+  .btn {
+    flex-grow: 1;
+    background-color: #4f4f4f;
+    @apply py-1 rounded text-lg;
+  }
+  .read {
+    flex-grow: 2;
+    background-color: var(--theme-accent);
+  }
+</style>
