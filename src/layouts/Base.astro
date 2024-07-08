@@ -21,18 +21,19 @@ const viewTransitions = Astro.props.viewTransitions ?? true;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="svg+xml" href="/favicon.svg" />
     {viewTransitions && <ViewTransitions />}
     <title>{title ?? SITE.TITLE}</title>
   </head>
-  <body class="min-h-screen">
-    <Header />
-    <main class="mx-4 flex flex-col justify-center items-center">
-      <slot name="main" />
-    </main>
-    <slot />
-    <Footer />
-  </body>
 </html>
+<body class="min-h-screen">
+  <Header />
+  <main class="w-full px-4 flex flex-col justify-center items-center gap-2">
+    <slot name="main" />
+  </main>
+  <slot />
+  <Footer />
+</body>
 
 <style>
   html {
