@@ -20,7 +20,7 @@ const { data: dataChapterFeed } = await getMangaChapterFeed(id);
 const chapters = orderMangaChapters(dataChapterFeed);
 ---
 
-<Base>
+<Base title={`${manga.title} | Manga Reader`}>
   <Fragment slot="main">
     <MangaInfo manga={manga} />
   </Fragment>
